@@ -50,7 +50,7 @@
 
 - (void)reload:(__unused id)sender {
     
-    self.limit = 10;
+    self.limit = 0;
     
     NSString *url = [NSString stringWithFormat:@"nc/article/list/%@/%d-%d.html",self.newsItemInfo[@"tid"],(int)(self.limit), (int)(self.limit+SH_MAX)];
     self.limit += SH_MAX;

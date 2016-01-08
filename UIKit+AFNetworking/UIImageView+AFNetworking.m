@@ -112,11 +112,34 @@
 
 - (void)setImageWithURL:(NSURL *)url
        placeholderImage:(UIImage *)placeholderImage
+                 isNeed:(BOOL)bYesOrNo
+{
+    if (bYesOrNo) {
+        [self setImageWithURL:url placeholderImage:placeholderImage];
+    }
+    else{
+        self.image = placeholderImage;
+        
+        
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
+        
+        [self cancelImageRequestOperation];
+        
+        UIImage *cachedImage = [[[self class] sharedImageCache] cachedImageForRequest:request];
+        if (cachedImage) {
+            self.image = cachedImage;
+            
+            self.af_imageRequestOperation = nil;
+        }
+    }
+}
+
+- (void)setImageWithURL:(NSURL *)url
+       placeholderImage:(UIImage *)placeholderImage
 {
     
     self.image = placeholderImage;
-    
-    //return;
     
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

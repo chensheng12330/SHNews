@@ -27,6 +27,8 @@
 
 #import "UIImageView+AFNetworking.h"
 
+#import "AppDelegate.h"
+
 @implementation PostTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style
@@ -51,7 +53,7 @@
 
     self.textLabel.text = _post.title;
     self.detailTextLabel.text = _post.digest;
-    [self.imageView setImageWithURL:[NSURL URLWithString:_post.imgsrc] placeholderImage:[UIImage imageNamed:@"profile-image-placeholder"]];
+    [self.imageView setImageWithURL:[NSURL URLWithString:_post.imgsrc] placeholderImage:[UIImage imageNamed:@"profile-image-placeholder"] isNeed:((AppDelegate*)[UIApplication sharedApplication].delegate).isNeedImage];
     
     [self setNeedsLayout];
 }

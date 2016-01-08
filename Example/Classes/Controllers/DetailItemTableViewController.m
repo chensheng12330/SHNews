@@ -21,7 +21,7 @@
     
     self.title = self.titleName;
     
-    
+        return;
 }
 
 #pragma mark - UITableViewDataSource
@@ -50,7 +50,7 @@
     NSString *imageURL = [NSString stringWithFormat:@"http://timge7.126.net/image?w=68&h=68&quality=75&url=http%%3A%%2F%%2Fimg2.cache.netease.com%%2Fm%%2Fnewsapp%%2Ftopic_icons%%2F%@.png",info[@"img"]];
     
     NSLog(@"%@",imageURL);
-    [cell.imageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"profile-image-placeholder"]];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:[UIImage imageNamed:@"profile-image-placeholder"] isNeed:self.isNeedImage];
     
     UIButton *btn = (UIButton*)[cell viewWithTag:1024];
     if (btn==NULL) {

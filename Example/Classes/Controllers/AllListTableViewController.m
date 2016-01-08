@@ -8,9 +8,11 @@
 
 #import "AllListTableViewController.h"
 #import "DetailItemTableViewController.h"
-
+#import "AppDelegate.h"
 @interface AllListTableViewController ()
 @property (readwrite, nonatomic, strong) NSArray *allList;
+
+@property (assign) BOOL isNeedImage;
 @end
 
 @implementation AllListTableViewController
@@ -20,9 +22,51 @@
     
     self.title = @"分类";
     
+    /*
+    NSData *data1 = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://c.m.163.com/nc/topicset/ios/v4/subscribe/read/all.html"]];
+    
+    self.allList = [data1 objectFromJSONData];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *docDir = [paths objectAtIndex:0];
+    
+    NSString *path = [NSString stringWithFormat:@"%@/all.txt",docDir];
+
+    [data1 writeToFile:path atomically:YES];
+    
+    NSLog(@"%@",path);
+    //*/
+    
     NSData *data = [[NSData alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"all" ofType:@"txt"] ];
     
     self.allList = [data objectFromJSONData];
+    
+    
+    self.isNeedImage = NO;
+   ((AppDelegate*)[UIApplication sharedApplication].delegate).isNeedImage = self.isNeedImage;
+    
+    UIButton * btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setFrame:CGRectMake(0, 0, 80, 40)];
+    [btn setBackgroundColor:[UIColor darkGrayColor]];
+    [btn setTitle:@"文字模式" forState:UIControlStateNormal ];
+    [btn addTarget:self action:@selector(needImage:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+
+    return;
+}
+
+-(void)needImage:(UIButton *)sender
+{
+    self.isNeedImage = !self.isNeedImage;
+    ((AppDelegate*)[UIApplication sharedApplication].delegate).isNeedImage = self.isNeedImage;
+    
+    if(!self.isNeedImage)
+    {
+        [sender setTitle:@"文字模式" forState:UIControlStateNormal ];
+    }
+    else{
+        [sender setTitle:@"图片模式" forState:UIControlStateNormal ];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -71,6 +115,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     detailItemVC.allList   = newsList;
     detailItemVC.titleName = info[@"cName"];
+    detailItemVC.isNeedImage = self.isNeedImage;
     
     [self.navigationController pushViewController:detailItemVC animated:YES];
 }
