@@ -7,6 +7,7 @@
 //
 
 #import "WebViewController.h"
+#import "AppDelegate.h"
 
 @interface WebViewController ()
 @property (nonatomic, strong) UIWebView *webView;
@@ -43,6 +44,23 @@
             NSDictionary *allVal = infoData[self.url];
             
             NSString *body = allVal[@"body"];
+            
+            if (((AppDelegate*)[UIApplication sharedApplication].delegate).isNeedImage) {
+                
+                NSArray *imgs = allVal[@"img"];
+                for (NSDictionary *dict in imgs) {
+                    NSString *ref = dict[@"ref"];
+                    NSString *src = dict[@"src"];
+                    ///<style>img{width:320px !important;}
+                    if (ref!=NULL  && src!=NULL) {
+                        src = [NSString stringWithFormat:@"<img src=\"%@\" style=\"width:320px !important;\"/>",src];
+                        
+                        body = [body stringByReplacingOccurrencesOfString:ref withString:src];
+                    }
+                }
+            }
+            //image replace
+            ///< src="/i/eg_tulip.jpg">
             
             [self.webView loadHTMLString:body baseURL:[NSURL URLWithString:self.addressURL]];
         }

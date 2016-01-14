@@ -30,6 +30,7 @@
 #import "UIAlertView+AFNetworking.h"
 #import "MJRefresh.h"
 #import "WebViewController.h"
+#import "AppDelegate.h"
 
 #define SH_MAX 20
 
@@ -71,17 +72,18 @@
 
 -(void)loadMore:(MJRefreshBaseView *)refreshView
 {
-    NSString *url = [NSString stringWithFormat:@"nc/article/list/%@/%d-%d.html",self.newsItemInfo[@"tid"],(int)(self.limit), (int)(self.limit+SH_MAX)];
+    NSString *url = [NSString stringWithFormat:@"nc/article/list/%@/%d-%d.html",self.newsItemInfo[@"tid"],(int)(self.limit), SH_MAX];
     
     self.limit += SH_MAX;
     
     NSURLSessionTask *task = [Post globalTimelinePostsWithBlock:^(NSArray *posts, NSError *error)   {
         if (!error) {
-            //NSMutableArray *addM = [NSMutableArray arrayWithArray:self.posts];
-            //[addM addObjectsFromArray:posts];
+            
             
             if (posts.count>0) {
-                self.posts = posts;
+                NSMutableArray *addM = [NSMutableArray arrayWithArray:self.posts];
+                [addM addObjectsFromArray:posts];
+                self.posts = addM;
                 
                 [self.tableView reloadData];
             }
